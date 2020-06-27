@@ -9,11 +9,11 @@
                 <form method="POST" action="${pageContext.request.contextPath}/update">
                     <c:import url="_form.jsp" />
                 </form>
+                <p><a href="${pageContext.request.contextPath}/index">一覧に戻る</a></p>
             </c:when>
             <c:otherwise>
                 <h2>該当のタスクは見つかりませんでした。</h2>
             </c:otherwise>
         </c:choose>
-        <p><a href="${pageContext.request.contextPath}/index">一覧に戻る</a></p>
     </c:param>
 </c:import>
