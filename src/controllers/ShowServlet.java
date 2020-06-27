@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.IOException;
 
+import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,18 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Task;
+import utils.DBUtil;
 
 /**
- * Servlet implementation class NewServlet
+ * Servlet implementation class ShowServlet
  */
-@WebServlet("/new")
-public class NewServlet extends HttpServlet {
+@WebServlet("/show")
+public class ShowServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NewServlet() {
+    public ShowServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,13 +32,17 @@ public class NewServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // CSRF対策
-        request.setAttribute("_token", request.getSession().getId());
 
-        // 各タスク登録の初期入力時に空データを表示するよう、インスタンスを生成
-        request.setAttribute("task", new Task());
+        EntityManager em = DBUtil.createEntityManager();
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/new.jsp");
+        // 該当のIDのタスク1県のみをデータベースから取得
+        Task t = em.find(Task.class, Integer.parseInt(request.getParameter("id")));
+
+        em.close();
+
+        request.setAttribute("task", t);
+
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/show.jsp");
         rd.forward(request, response);
     }
 }
